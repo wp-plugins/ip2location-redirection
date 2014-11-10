@@ -3,7 +3,7 @@
  * Plugin Name: IP2Location Redirection
  * Plugin URI: http://ip2location.com/tutorials/wordpress-ip2location-redirection
  * Description: Redirect visitors by their country.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: IP2Location
  * Author URI: http://www.ip2location.com
  */
@@ -363,20 +363,20 @@ class IP2LocationRedirection {
 					Enter a valid IP address for checking.
 				</p>';
 
-			$ipAddress = (isset($_POST['ipAddress'])) ? $_POST['ipAddress'] : '';
+			$ipAddress = ( isset( $_POST['ipAddress'] ) ) ? $_POST['ipAddress'] : '';
 
-			if (isset($_POST['lookup'])) {
-				if (!filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6)) {
+			if ( isset( $_POST['lookup'] ) ) {
+				if ( !filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
 					echo '
 					<div id="message" class="error">
 						<p><strong>ERROR</strong>: Invalid IP address.</p>
 					</div>';
 				}
 				else {
-					$response = IP2LocationRedirection::get_location($ipAddress);
+					$response = IP2LocationRedirection::get_location( $ipAddress );
 
-					if($response['countryName']){
-						if($response['countryCode'] != '??'){
+					if ( $response['countryName'] ) {
+						if ( $response['countryCode'] != '??' && strlen( $response['countryCode'] ) == 2 ) {
 							echo '
 							<div id="message" class="updated">
 								<p>IP address <strong>' . $ipAddress . '</strong> belongs to <strong>' . $response['countryName'] . '</strong>.</p>
@@ -481,7 +481,7 @@ class IP2LocationRedirection {
 							die;
 						}
 
-						unset($_SESSION['ip2location_redirection_redirected']);
+						unset( $_SESSION['ip2location_redirection_redirected'] );
 					}
 
 					list( $type, $id ) = explode( '-', $values[1] );
@@ -527,6 +527,16 @@ class IP2LocationRedirection {
 		update_option( 'ip2location_redirection_enabled', 1 );
 		update_option( 'ip2location_redirection_database', '' );
 		update_option( 'ip2location_redirection_rules', '[]' );
+
+		// Find any .BIN files in current directory
+		$files = scandir( IP2LOCATION_REDIRECTION_ROOT );
+
+		foreach( $files as $file ){
+			if ( substr( $file, -4 ) == '.bin' || substr( $file, -4 ) == '.BIN' ){
+				update_option( 'ip2location_redirection_database', $file );
+				break;
+			}
+		}
 	}
 
 	function uninstall() {
@@ -538,7 +548,7 @@ class IP2LocationRedirection {
 
 	function get_location( $ip ) {
 		// Make sure IP2Location database is exist.
-		if ( !file_exists( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) ) ) {
+		if ( !is_file( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) ) ) {
 			return false;
 		}
 
