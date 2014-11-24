@@ -41,7 +41,7 @@ Send us email at support@ip2location.com
 
 == Screenshots ==
 
-1. **Country lookup by ip address** - Allow you to perform country lookup by entering a IP address.
+1. Redirect visitor from Nigeria to http://google.com.
 
 == Changelog ==
 
