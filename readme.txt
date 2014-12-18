@@ -3,7 +3,7 @@ Contributors: IP2Location
 Donate link: http://www.ip2location.com
 Tags: country redirection, targeted content, geolocation
 Requires at least: 2.0
-Tested up to: 3.9
+Tested up to: 4.1
 Stable tag: 1.0.1
 
 Description: IP2Location Redirection allows user to redirect visitors from any URL based on their country.
