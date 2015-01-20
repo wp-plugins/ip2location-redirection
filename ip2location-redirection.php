@@ -3,7 +3,7 @@
  * Plugin Name: IP2Location Redirection
  * Plugin URI: http://ip2location.com/tutorials/wordpress-ip2location-redirection
  * Description: Redirect visitors by their country.
- * Version: 1.0.1
+ * Version: 1.1.0
  * Author: IP2Location
  * Author URI: http://www.ip2location.com
  */
@@ -26,9 +26,13 @@ class IP2LocationRedirection {
 				}
 			}
 
-			$save_status = '';
+			$redirection_status = '';
+			$mode_status = '';
 
 			$enabled = ( isset( $_POST['countryCode'] ) && isset( $_POST['enableRedirection'] ) ) ? 1 : ( ( isset( $_POST['countryCode'] ) && !isset( $_POST['enableRedirection'] ) ) ? 0 : get_option( 'ip2location_redirection_enabled' ) );
+
+			$lookup_mode = ( isset( $_POST['lookupMode'] ) ) ? $_POST['lookupMode'] : get_option( 'ip2location_redirection_lookup_mode' );
+			$api_key = ( isset( $_POST['apiKey'] ) ) ? $_POST['apiKey'] : get_option( 'ip2location_redirection_api_key' );
 
 			if ( isset( $_POST['countryCode'] ) && is_array( $_POST['countryCode'] ) ) {
 				$index = 0;
@@ -60,7 +64,7 @@ class IP2LocationRedirection {
 					}
 
 					if ( $_POST['to'][$index] == 'url' && !filter_var( $_POST['url'][$index], FILTER_VALIDATE_URL ) ) {
-						$save_status .= '
+						$redirection_status .= '
 						<div id="message" class="error">
 							<p><strong>' . $_POST['url'][$index] . '</strong> is not a valid URL, it has been excluded from saving.</p>
 						</div>';
@@ -76,9 +80,19 @@ class IP2LocationRedirection {
 				update_option( 'ip2location_redirection_enabled', $enabled );
 				update_option( 'ip2location_redirection_rules', json_encode($rules) );
 
-				$save_status .= '
+				$redirection_status .= '
 				<div id="message" class="updated">
-					<p>Changed saved.</p>
+					<p>Changes saved.</p>
+				</div>';
+			}
+
+			if( isset( $_POST['lookupMode'] ) ) {
+				update_option( 'ip2location_redirection_lookup_mode', $lookup_mode );
+				update_option( 'ip2location_redirection_api_key', $api_key );
+
+				$mode_status .= '
+				<div id="message" class="updated">
+					<p>Changes saved.</p>
 				</div>';
 			}
 
@@ -134,7 +148,9 @@ class IP2LocationRedirection {
 							addRow("", "", "", "", 301);
 						});
 
-						$("#download").on("click", function(){
+						$("#download").on("click", function(e){
+							e.preventDefault();
+
 							if ($("#productCode").val() == "" || $("#username").val() == "" || $("#password").val() == ""){
 								return;
 							}
@@ -165,14 +181,35 @@ class IP2LocationRedirection {
 							});
 						});
 
-						$("#form-redirection").on("submit", function(){
+						$("#form-redirection").on("submit", function(e){
 							$(\'select[name="from[]"]\').each(function(){
 								if($(this).val() == ""){
 									alert("Please select Post/Page for redirection.");
-									return false;
+
+									e.preventDefault();
 								}
 							});
 						});
+
+						$("#use-bin").on("click", function(){
+							$("#bin-mode").show();
+							$("#ws-mode").hide();
+
+							$("html, body").animate({
+								scrollTop: $("#use-bin").offset().top - 50
+							}, 100);
+						});
+
+						$("#use-ws").on("click", function(){
+							$("#bin-mode").hide();
+							$("#ws-mode").show();
+
+							$("html, body").animate({
+								scrollTop: $("#use-ws").offset().top - 50
+							}, 100);
+						});
+
+						$("#' . ( ( $lookup_mode == 'bin' ) ? 'bin-mode' : 'ws-mode' ) . '").show();
 					});
 
 					function addRow(countryCode, from, to, url, statusCode){
@@ -303,42 +340,111 @@ class IP2LocationRedirection {
 			<div class="wrap">
 				<h2>IP2Location Redirection</h2>
 				<p>
-					IP2Location Redirection allows user to easily redirect visitors predefined location based on their country. This plugin uses IP2Location BIN file for location queries that free your hassle from setting up the relational database.<br/><br/>
-					BIN file download: <a href="http://www.ip2location.com/?r=wordpress" target="_blank">IP2Location Commercial database</a> | <a href="http://lite.ip2location.com/?r=wordpress" targe="_blank">IP2Location LITE database (free edition)</a>.
-				</p>';
+					IP2Location Redirection allows user to easily redirect visitors predefined location based on their country.
+				</p>
 
-			if ( !file_exists( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) ) ) {
-				echo '
-				<div id="message" class="error">
+				<p>&nbsp;</p>
+
+				<div style="border-bottom:1px solid #ccc;">
+					<h3>Lookup Mode</h3>
+				</div>
+
+				' . $mode_status . '
+
+				<form id="form-lookup-mode" method="post">
 					<p>
-						Unable to find the IP2Location BIN database! Please download the database at at <a href="http://www.ip2location.com/?r=wordpress" target="_blank">IP2Location commercial database</a> | <a href="http://lite.ip2location.com/?r=wordpress" target="_blank">IP2Location LITE database (free edition)</a>.
+						<label><input id="use-bin" type="radio" name="lookupMode" value="bin"' . ( ( $lookup_mode == 'bin' ) ? ' checked' : '' ) . '> Local BIN database</label>
+
+						<div id="bin-mode" style="margin-left:50px;display:none;background:#d7d7d7;padding:20px">
+							<p>
+								BIN file download: <a href="http://www.ip2location.com/?r=wordpress" target="_blank">IP2Location Commercial database</a> | <a href="http://lite.ip2location.com/?r=wordpress" targe="_blank">IP2Location LITE database (free edition)</a>.
+							</p>';
+
+						if ( !file_exists( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) ) ) {
+							echo '
+							<div id="message" class="error">
+								<p>
+									Unable to find the IP2Location BIN database! Please download the database at at <a href="http://www.ip2location.com/?r=wordpress" target="_blank">IP2Location commercial database</a> | <a href="http://lite.ip2location.com/?r=wordpress" target="_blank">IP2Location LITE database (free edition)</a>.
+								</p>
+							</div>';
+						}
+						else {
+							echo '
+							<p>
+								<b>Current Database Version: </b>
+								' . date( 'F Y', filemtime( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) ) ) . '
+							</p>';
+
+							if ( filemtime( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) ) < strtotime( '-2 months' ) ) {
+								echo '
+								<div style="background:#fff;padding:2px 10px;border-left:3px solid #cc0000">
+									<p>
+										<strong>REMINDER</strong>: Your IP2Location database was outdated. Please download the latest version for accurate result.
+									</p>
+								</div>';
+							}
+						}
+
+						echo '
+							<p>&nbsp;</p>
+
+							<div style="border-bottom:1px solid #ccc;">
+								<h4>Download BIN Database</h4>
+							</div>
+
+							<div id="download-status" style="margin:10px 0;"></div>
+
+							<strong>Product Code</strong>:
+							<select id="productCode" type="text" value="" style="margin-right:10px;" >
+								<option value="DB1LITEBIN">DB1LITEBIN</option>
+								<option value="DB1BIN">DB1BIN</option>
+								<option value="DB1LITEBINIPV6">DB1LITEBINIPV6</option>
+								<option value="DB1BINIPV6">DB1BINIPV6</option>
+							</select>
+
+							<strong>Email</strong>:
+							<input id="username" type="text" value="" style="margin-right:10px;" />
+
+							<strong>Password</strong>:
+							<input id="password" type="password" value="" style="margin-right:10px;" />
+
+							<button id="download" class="button action">Download</button>
+
+							<span style="display:block; font-size:0.8em">Enter the product code, i.e, DB1LITEBIN, (the code in square bracket on your license page) and login credential for the download.</span>
+
+							<div style="margin-top:20px;">
+								<strong>Note</strong>: If you failed to download the BIN database using this automated downloading tool, please follow the below procedures to manually update the database.
+								<ol style="list-style-type:circle;margin-left:30px">
+									<li>Download the BIN database at <a href="http://www.ip2location.com/?r=wordpress" target="_blank">IP2Location commercial database</a> | <a href="http://lite.ip2location.com/?r=wordpress" target="_blank">IP2Location LITE database (free edition)</a>.</li>
+									<li>Decompress the zip file and update the BIN database to /wp-content/plugins/ip2location-redirection/.</li>
+									<li>Once completed, please refresh the information by reloading the setting page.</li>
+								</ol>
+							</div>
+							<p>&nbsp;</p>
+						</div>
 					</p>
-				</div>';
-			}
-			else {
-				echo '
-				<p>
-					<b>Current Database Version: </b>
-					' . date( 'F Y', filemtime( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) ) ) . '
-				</p>';
+					<p>
+						<label><input id="use-ws" type="radio" name="lookupMode" value="ws"' . ( ( $lookup_mode == 'ws' ) ? ' checked' : '' ) . '> IP2Location Web Service</label>
 
-				if ( filemtime( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) ) < strtotime( '-2 months' ) ) {
-					echo '
-					<div id="message" class="error">
-						<p>
-							<strong>REMINDER</strong>: Your IP2Location database was outdated. Please download the latest version for accurate result.
-						</p>
-					</div>';
-				}
-			}
+						<div id="ws-mode" style="margin-left:50px;display:none;background:#d7d7d7;padding:20px">
+							<p>Please insert your IP2Location <a href="http://www.ip2location.com/web-service" target="_blank">Web service</a> API key.</p>
+							<p>
+								<strong>API Key</strong>:
+								<input name="apiKey" type="text" value="' . $api_key . '" style="margin-right:10px;" />
+							</p>
+						</div>
+					</p>
+					<p class="submit">
+						<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes"  />
+					</p>
+				</form>
 
-			echo '
 				<p>&nbsp;</p>
 
 				<div style="border-bottom:1px solid #ccc;">
 					<h3>Site Redirection</h3>
 				</div>
-				' . $save_status . '
+				' . $redirection_status . '
 				<form id="form-redirection" method="post">
 					<p>
 						<input type="checkbox" id="enable-redirection" name="enableRedirection"' . (($enabled) ? ' checked' : '') . ' /><label for="enable-redirection">Enable Redirection</label>
@@ -408,39 +514,6 @@ class IP2LocationRedirection {
 				</form>
 
 				<p>&nbsp;</p>
-
-				<div style="border-bottom:1px solid #ccc;">
-					<h3>Download BIN Database</h3>
-				</div>
-
-				<div id="download-status" style="margin:10px 0;"></div>
-
-				<strong>Product Code</strong>:
-				<select id="productCode" type="text" value="" style="margin-right:10px;" >
-					<option value="DB1LITEBIN">DB1LITEBIN</option>
-					<option value="DB1BIN">DB1BIN</option>
-					<option value="DB1LITEBINIPV6">DB1LITEBINIPV6</option>
-					<option value="DB1BINIPV6">DB1BINIPV6</option>
-				</select>
-
-				<strong>Email</strong>:
-				<input id="username" type="text" value="" style="margin-right:10px;" />
-
-				<strong>Password</strong>:
-				<input id="password" type="password" value="" style="margin-right:10px;" />
-
-				<button id="download" class="button action">Download</button>
-
-				<span style="display:block; font-size:0.8em">Enter the product code, i.e, DB1LITEBIN, (the code in square bracket on your license page) and login credential for the download.</span>
-
-				<div style="margin-top:20px;">
-					<strong>Note</strong>: If you failed to download the BIN database using this automated downloading tool, please follow the below procedures to manually update the database.
-					<ol style="list-style-type:circle;margin-left:30px">
-						<li>Download the BIN database at <a href="http://www.ip2location.com/?r=wordpress" target="_blank">IP2Location commercial database</a> | <a href="http://lite.ip2location.com/?r=wordpress" target="_blank">IP2Location LITE database (free edition)</a>.</li>
-						<li>Decompress the zip file and update the BIN database to /wp-content/plugins/ip2location-redirection/.</li>
-						<li>Once completed, please refresh the information by reloading the setting page.</li>
-					</ol>
-				</div>
 			</div>';
 		}
 	}
@@ -454,6 +527,11 @@ class IP2LocationRedirection {
 			session_start();
 		}
 
+		if( isset( $_SESSION['ip2location_redirection_redirected'] ) ) {
+			unset( $_SESSION['ip2location_redirection_redirected'] );
+			return;
+		}
+
 		if( !is_null( $data = json_decode( get_option( 'ip2location_redirection_rules' ) ) ) ) {
 			$ipAddress = $_SERVER['REMOTE_ADDR'];
 
@@ -465,23 +543,19 @@ class IP2LocationRedirection {
 
 			foreach( $data as $values ) {
 				if ( $result['countryCode'] == $values[0] ) {
+					$_SESSION['ip2location_redirection_redirected'] = true;
+
 					// Global redirection
 					if ( $values[1] == 'any' ) {
-						if ( !isset( $_SESSION['ip2location_redirection_redirected'] ) ) {
-							$_SESSION['ip2location_redirection_redirected'] = true;
-
-							if ( $values[2] == 'url' ) {
-								header( 'Location: ' . $values[3], true, $values[4] );
-								die;
-							}
-
-							list( $type, $id ) = explode( '-', $values[2] );
-
-							header( 'Location: ' . post_permalink( $id ), true, $values[4] );
+						if ( $values[2] == 'url' ) {
+							header( 'Location: ' . $values[3], true, $values[4] );
 							die;
 						}
 
-						unset( $_SESSION['ip2location_redirection_redirected'] );
+						list( $type, $id ) = explode( '-', $values[2] );
+
+						header( 'Location: ' . post_permalink( $id ), true, $values[4] );
+						die;
 					}
 
 					list( $type, $id ) = explode( '-', $values[1] );
@@ -525,6 +599,8 @@ class IP2LocationRedirection {
 	function set_defaults() {
 		// Initial default settings
 		update_option( 'ip2location_redirection_enabled', 1 );
+		update_option( 'ip2location_redirection_lookup_mode', 'bin' );
+		update_option( 'ip2location_redirection_api_key', '' );
 		update_option( 'ip2location_redirection_database', '' );
 		update_option( 'ip2location_redirection_rules', '[]' );
 
@@ -542,37 +618,52 @@ class IP2LocationRedirection {
 	function uninstall() {
 		// Remove all settings
 		delete_option( 'ip2location_redirection_enabled' );
+		delete_option( 'ip2location_redirection_lookup_mode' );
 		delete_option( 'ip2location_redirection_database' );
 		delete_option( 'ip2location_redirection_rules' );
 	}
 
 	function get_location( $ip ) {
-		// Make sure IP2Location database is exist.
-		if ( !is_file( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) ) ) {
-			return false;
+		switch( get_option( 'ip2location_redirection_lookup_mode' ) ) {
+			case 'bin':
+				// Make sure IP2Location database is exist.
+				if ( !is_file( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) ) ) {
+					return false;
+				}
+
+				if ( ! class_exists( 'IP2LocationRecord' ) && ! class_exists( 'IP2Location' ) ) {
+					require_once( IP2LOCATION_REDIRECTION_ROOT . 'ip2location.class.php' );
+				}
+
+				// Create IP2Location object.
+				$geo = new IP2Location( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) );
+
+				// Get geolocation by IP address.
+				$response = $geo->lookup( $ip );
+
+				return array(
+					'countryCode' => $response->countryCode,
+					'countryName' => $response->countryName,
+				);
+			break;
+
+			case 'ws':
+				if ( !class_exists( 'WP_Http' ) ) {
+					include_once( ABSPATH . WPINC . '/class-http.php' );
+				}
+
+				$request = new WP_Http();
+				$response = $request->request( 'http://api.ip2location.com/?' . http_build_query( array(
+					'key' => get_option( 'ip2location_redirection_api_key' ),
+					'ip' => $ip,
+				) ) , array( 'timeout' => 3 ) );
+
+				return array(
+					'countryCode' => $response['body'],
+					'countryName' => IP2LocationRedirection::get_country_name( $response['body'] ),
+				);
+			break;
 		}
-
-		if ( ! class_exists( 'IP2LocationRecord' ) && ! class_exists( 'IP2Location' ) ) {
-			require_once( IP2LOCATION_REDIRECTION_ROOT . 'ip2location.class.php' );
-		}
-
-		// Create IP2Location object.
-		$geo = new IP2Location( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) );
-
-		// Get geolocation by IP address.
-		$response = $geo->lookup( $ip );
-
-		return array(
-			'countryCode' => $response->countryCode,
-			'countryName' => IP2LocationRedirection::set_case( $response->countryName ),
-		);
-	}
-
-	function set_case( $s ) {
-		$s = ucwords( strtolower( $s ) );
-		$s = preg_replace_callback( "/( [ a-zA-Z]{1}')([a-zA-Z0-9]{1})/s", create_function( '$matches', 'return $matches[1].strtoupper($matches[2]);' ), $s );
-
-		return $s;
 	}
 
 	function download() {
@@ -650,6 +741,12 @@ class IP2LocationRedirection {
 		}
 
 		die( 'ERROR' );
+	}
+
+	function get_country_name( $code ) {
+		$countries = array( 'AF' => 'Afghanistan','AL' => 'Albania','DZ' => 'Algeria','AS' => 'American Samoa','AD' => 'Andorra','AO' => 'Angola','AI' => 'Anguilla','AQ' => 'Antarctica','AG' => 'Antigua and Barbuda','AR' => 'Argentina','AM' => 'Armenia','AW' => 'Aruba','AU' => 'Australia','AT' => 'Austria','AZ' => 'Azerbaijan','BS' => 'Bahamas','BH' => 'Bahrain','BD' => 'Bangladesh','BB' => 'Barbados','BY' => 'Belarus','BE' => 'Belgium','BZ' => 'Belize','BJ' => 'Benin','BM' => 'Bermuda','BT' => 'Bhutan','BO' => 'Bolivia','BA' => 'Bosnia and Herzegovina','BW' => 'Botswana','BV' => 'Bouvet Island','BR' => 'Brazil','IO' => 'British Indian Ocean Territory','BN' => 'Brunei Darussalam','BG' => 'Bulgaria','BF' => 'Burkina Faso','BI' => 'Burundi','KH' => 'Cambodia','CM' => 'Cameroon','CA' => 'Canada','CV' => 'Cape Verde','KY' => 'Cayman Islands','CF' => 'Central African Republic','TD' => 'Chad','CL' => 'Chile','CN' => 'China','CX' => 'Christmas Island','CC' => 'Cocos (Keeling) Islands','CO' => 'Colombia','KM' => 'Comoros','CG' => 'Congo','CK' => 'Cook Islands','CR' => 'Costa Rica','CI' => 'Cote D\'Ivoire','HR' => 'Croatia','CU' => 'Cuba','CY' => 'Cyprus','CZ' => 'Czech Republic','CD' => 'Democratic Republic of Congo','DK' => 'Denmark','DJ' => 'Djibouti','DM' => 'Dominica','DO' => 'Dominican Republic','TP' => 'East Timor','EC' => 'Ecuador','EG' => 'Egypt','SV' => 'El Salvador','GQ' => 'Equatorial Guinea','ER' => 'Eritrea','EE' => 'Estonia','ET' => 'Ethiopia','FK' => 'Falkland Islands (Malvinas)','FO' => 'Faroe Islands','FJ' => 'Fiji','FI' => 'Finland','FR' => 'France','FX' => 'France, Metropolitan','GF' => 'French Guiana','PF' => 'French Polynesia','TF' => 'French Southern Territories','GA' => 'Gabon','GM' => 'Gambia','GE' => 'Georgia','DE' => 'Germany','GH' => 'Ghana','GI' => 'Gibraltar','GR' => 'Greece','GL' => 'Greenland','GD' => 'Grenada','GP' => 'Guadeloupe','GU' => 'Guam','GT' => 'Guatemala','GN' => 'Guinea','GW' => 'Guinea-bissau','GY' => 'Guyana','HT' => 'Haiti','HM' => 'Heard and Mc Donald Islands','HN' => 'Honduras','HK' => 'Hong Kong','HU' => 'Hungary','IS' => 'Iceland','IN' => 'India','ID' => 'Indonesia','IR' => 'Iran (Islamic Republic of)','IQ' => 'Iraq','IE' => 'Ireland','IL' => 'Israel','IT' => 'Italy','JM' => 'Jamaica','JP' => 'Japan','JO' => 'Jordan','KZ' => 'Kazakhstan','KE' => 'Kenya','KI' => 'Kiribati','KR' => 'Korea, Republic of','KW' => 'Kuwait','KG' => 'Kyrgyzstan','LA' => 'Lao People\'s Democratic Republic','LV' => 'Latvia','LB' => 'Lebanon','LS' => 'Lesotho','LR' => 'Liberia','LY' => 'Libyan Arab Jamahiriya','LI' => 'Liechtenstein','LT' => 'Lithuania','LU' => 'Luxembourg','MO' => 'Macau','MK' => 'Macedonia','MG' => 'Madagascar','MW' => 'Malawi','MY' => 'Malaysia','MV' => 'Maldives','ML' => 'Mali','MT' => 'Malta','MH' => 'Marshall Islands','MQ' => 'Martinique','MR' => 'Mauritania','MU' => 'Mauritius','YT' => 'Mayotte','MX' => 'Mexico','FM' => 'Micronesia, Federated States of','MD' => 'Moldova, Republic of','MC' => 'Monaco','MN' => 'Mongolia','MS' => 'Montserrat','MA' => 'Morocco','MZ' => 'Mozambique','MM' => 'Myanmar','NA' => 'Namibia','NR' => 'Nauru','NP' => 'Nepal','NL' => 'Netherlands','AN' => 'Netherlands Antilles','NC' => 'New Caledonia','NZ' => 'New Zealand','NI' => 'Nicaragua','NE' => 'Niger','NG' => 'Nigeria','NU' => 'Niue','NF' => 'Norfolk Island','KP' => 'North Korea','MP' => 'Northern Mariana Islands','NO' => 'Norway','OM' => 'Oman','PK' => 'Pakistan','PW' => 'Palau','PA' => 'Panama','PG' => 'Papua New Guinea','PY' => 'Paraguay','PE' => 'Peru','PH' => 'Philippines','PN' => 'Pitcairn','PL' => 'Poland','PT' => 'Portugal','PR' => 'Puerto Rico','QA' => 'Qatar','RE' => 'Reunion','RO' => 'Romania','RU' => 'Russian Federation','RW' => 'Rwanda','KN' => 'Saint Kitts and Nevis','LC' => 'Saint Lucia','VC' => 'Saint Vincent and the Grenadines','WS' => 'Samoa','SM' => 'San Marino','ST' => 'Sao Tome and Principe','SA' => 'Saudi Arabia','SN' => 'Senegal','SC' => 'Seychelles','SL' => 'Sierra Leone','SG' => 'Singapore','SK' => 'Slovak Republic','SI' => 'Slovenia','SB' => 'Solomon Islands','SO' => 'Somalia','ZA' => 'South Africa','GS' => 'South Georgia And The South Sandwich Islands','ES' => 'Spain','LK' => 'Sri Lanka','SH' => 'St. Helena','PM' => 'St. Pierre and Miquelon','SD' => 'Sudan','SR' => 'Suriname','SJ' => 'Svalbard and Jan Mayen Islands','SZ' => 'Swaziland','SE' => 'Sweden','CH' => 'Switzerland','SY' => 'Syrian Arab Republic','TW' => 'Taiwan','TJ' => 'Tajikistan','TZ' => 'Tanzania, United Republic of','TH' => 'Thailand','TG' => 'Togo','TK' => 'Tokelau','TO' => 'Tonga','TT' => 'Trinidad and Tobago','TN' => 'Tunisia','TR' => 'Turkey','TM' => 'Turkmenistan','TC' => 'Turks and Caicos Islands','TV' => 'Tuvalu','UG' => 'Uganda','UA' => 'Ukraine','AE' => 'United Arab Emirates','GB' => 'United Kingdom','US' => 'United States','UM' => 'United States Minor Outlying Islands','UY' => 'Uruguay','UZ' => 'Uzbekistan','VU' => 'Vanuatu','VA' => 'Vatican City State (Holy See)','VE' => 'Venezuela','VN' => 'Viet Nam','VG' => 'Virgin Islands (British)','VI' => 'Virgin Islands (U.S.)','WF' => 'Wallis and Futuna Islands','EH' => 'Western Sahara','YE' => 'Yemen','YU' => 'Yugoslavia','ZM' => 'Zambia','ZW' => 'Zimbabwe' );
+
+		return ( isset( $countries[$code] ) ) ? $countries[$code] : '';
 	}
 }
 // Initial class
