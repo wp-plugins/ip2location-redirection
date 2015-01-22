@@ -3,11 +3,11 @@
  * Plugin Name: IP2Location Redirection
  * Plugin URI: http://ip2location.com/tutorials/wordpress-ip2location-redirection
  * Description: Redirect visitors by their country.
- * Version: 1.1.1
+ * Version: 1.1.2
  * Author: IP2Location
  * Author URI: http://www.ip2location.com
  */
-defined('DS') or define('DS', DIRECTORY_SEPARATOR);
+defined( 'DS' ) or define( 'DS', DIRECTORY_SEPARATOR );
 define( 'IP2LOCATION_REDIRECTION_ROOT', dirname( __FILE__ ) . DS );
 
 class IP2LocationRedirection {
@@ -20,7 +20,7 @@ class IP2LocationRedirection {
 			$files = scandir( IP2LOCATION_REDIRECTION_ROOT );
 
 			foreach( $files as $file ){
-				if ( substr( $file, -4 ) == '.bin' || substr( $file, -4 ) == '.BIN' ){
+				if ( strtoupper( substr( $file, -4 ) ) == '.BIN' ){
 					update_option( 'ip2location_redirection_database', $file );
 					break;
 				}
@@ -479,7 +479,7 @@ class IP2LocationRedirection {
 					</div>';
 				}
 				else {
-					$response = IP2LocationRedirection::get_location( $ipAddress );
+					$response = $this->get_location( $ipAddress );
 
 					if ( $response['countryName'] ) {
 						if ( $response['countryCode'] != '??' && strlen( $response['countryCode'] ) == 2 ) {
@@ -539,7 +539,7 @@ class IP2LocationRedirection {
 				$ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
 			}
 
-			$result = IP2LocationRedirection::get_location( $ipAddress );
+			$result = $this->get_location( $ipAddress );
 
 			foreach( $data as $values ) {
 				if ( $result['countryCode'] == $values[0] ) {
@@ -608,7 +608,7 @@ class IP2LocationRedirection {
 		$files = scandir( IP2LOCATION_REDIRECTION_ROOT );
 
 		foreach( $files as $file ){
-			if ( substr( $file, -4 ) == '.bin' || substr( $file, -4 ) == '.BIN' ){
+			if ( strtoupper( substr( $file, -4 ) ) == '.BIN' ){
 				update_option( 'ip2location_redirection_database', $file );
 				break;
 			}
@@ -619,6 +619,7 @@ class IP2LocationRedirection {
 		// Remove all settings
 		delete_option( 'ip2location_redirection_enabled' );
 		delete_option( 'ip2location_redirection_lookup_mode' );
+		update_option( 'ip2location_redirection_api_key', '' );
 		delete_option( 'ip2location_redirection_database' );
 		delete_option( 'ip2location_redirection_rules' );
 	}
@@ -660,7 +661,7 @@ class IP2LocationRedirection {
 
 				return array(
 					'countryCode' => $response['body'],
-					'countryName' => IP2LocationRedirection::get_country_name( $response['body'] ),
+					'countryName' => $this->get_country_name( $response['body'] ),
 				);
 			break;
 		}
@@ -718,7 +719,7 @@ class IP2LocationRedirection {
 				$files = scandir( IP2LOCATION_REDIRECTION_ROOT );
 
 				foreach( $files as $file ){
-					if ( substr( $file, -4 ) == '.bin' || substr( $file, -4 ) == '.BIN' ){
+					if ( strtoupper( substr( $file, -4 ) ) == '.BIN' ){
 						@unlink( IP2LOCATION_REDIRECTION_ROOT . $file );
 					}
 				}
@@ -753,9 +754,9 @@ class IP2LocationRedirection {
 $ip2location_redirection = new IP2LocationRedirection();
 $ip2location_redirection->start();
 
-register_activation_hook( __FILE__, array( 'IP2LocationRedirection', 'set_defaults' ) );
-register_uninstall_hook( __FILE__, array( 'IP2LocationRedirection', 'uninstall' ) );
+register_activation_hook( __FILE__, array( $ip2location_redirection, 'set_defaults' ) );
+register_uninstall_hook( __FILE__, array( $ip2location_redirection, 'uninstall' ) );
 
-add_action( 'wp_ajax_update_ip2location_redirection_database', array( 'IP2LocationRedirection', 'download' ) );
-add_action( 'wp', array( 'IP2LocationRedirection', 'redirect' ) );
+add_action( 'wp_ajax_update_ip2location_redirection_database', array( $ip2location_redirection, 'download' ) );
+add_action( 'wp', array( $ip2location_redirection, 'redirect' ) );
 ?>
