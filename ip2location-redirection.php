@@ -182,13 +182,15 @@ class IP2LocationRedirection {
 						});
 
 						$("#form-redirection").on("submit", function(e){
-							$(\'select[name="from[]"]\').each(function(){
-								if($(this).val() == ""){
-									alert("Please select Post/Page for redirection.");
+							if($("#enable-redirection").is(":checked")){
+								$(\'select[name="from[]"]\').each(function(){
+									if($(this).val() == ""){
+										alert("Please select Post/Page for redirection.");
 
-									e.preventDefault();
-								}
-							});
+										e.preventDefault();
+									}
+								});
+							}
 						});
 
 						$("#use-bin").on("click", function(){
@@ -445,9 +447,9 @@ class IP2LocationRedirection {
 					<h3>Site Redirection</h3>
 				</div>
 				' . $redirection_status . '
-				<form id="form-redirection" method="post">
+				<form id="form-redirection" action="#form-redirection" method="post">
 					<p>
-						<input type="checkbox" id="enable-redirection" name="enableRedirection"' . (($enabled) ? ' checked' : '') . ' /><label for="enable-redirection">Enable Redirection</label>
+						<input type="checkbox" id="enable-redirection" name="enableRedirection"' . ( ( $enabled ) ? ' checked' : '' ) . ' /><label for="enable-redirection">Enable Redirection</label>
 					</p>
 
 					<div id="redirection"></div>
