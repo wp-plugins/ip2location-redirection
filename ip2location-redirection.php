@@ -3,7 +3,7 @@
  * Plugin Name: IP2Location Redirection
  * Plugin URI: http://ip2location.com/tutorials/wordpress-ip2location-redirection
  * Description: Redirect visitors by their country.
- * Version: 1.1.2
+ * Version: 1.1.3
  * Author: IP2Location
  * Author URI: http://www.ip2location.com
  */
@@ -529,11 +529,6 @@ class IP2LocationRedirection {
 			session_start();
 		}
 
-		if( isset( $_SESSION['ip2location_redirection_redirected'] ) ) {
-			unset( $_SESSION['ip2location_redirection_redirected'] );
-			return;
-		}
-
 		if( !is_null( $data = json_decode( get_option( 'ip2location_redirection_rules' ) ) ) ) {
 			$ipAddress = $_SERVER['REMOTE_ADDR'];
 
@@ -545,8 +540,6 @@ class IP2LocationRedirection {
 
 			foreach( $data as $values ) {
 				if ( $result['countryCode'] == $values[0] ) {
-					$_SESSION['ip2location_redirection_redirected'] = true;
-
 					// Global redirection
 					if ( $values[1] == 'any' ) {
 						if ( $values[2] == 'url' ) {
@@ -569,6 +562,26 @@ class IP2LocationRedirection {
 						}
 
 						list( $type, $id ) = explode( '-', $values[2] );
+
+						if( $_SERVER['QUERY_STRING'] ) {
+							parse_str( $_SERVER['QUERY_STRING'], $query_string );
+							unset( $queries['p'] );
+
+							$post_url = post_permalink( $id );
+							$data = parse_url( $post_url );
+
+							$post_query = array();
+
+							if( isset( $data['query'] ) ){
+								parse_str( $data['query'], $post_query );
+							}
+
+							$queries = array_merge( $post_query, $query_string );
+
+							header( 'Location: ' . $data['scheme'] . '://' . $data['host'] . '/?' . http_build_query( $queries ), true, $values[4] );
+
+							die;
+						}
 
 						header( 'Location: ' . post_permalink( $id ), true, $values[4] );
 						die;
