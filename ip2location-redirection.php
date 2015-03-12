@@ -578,7 +578,7 @@ class IP2LocationRedirection {
 
 							$queries = array_merge( $post_query, $query_string );
 
-							header( 'Location: ' . $data['scheme'] . '://' . $data['host'] . '/?' . http_build_query( $queries ), true, $values[4] );
+							header( 'Location: ' . $data['scheme'] . '://' . $data['host'] . $data['path'] . '/?' . http_build_query( $queries ), true, $values[4] );
 
 							die;
 						}
