@@ -3,7 +3,7 @@
  * Plugin Name: IP2Location Redirection
  * Plugin URI: http://ip2location.com/tutorials/wordpress-ip2location-redirection
  * Description: Redirect visitors by their country.
- * Version: 1.1.4
+ * Version: 1.1.5
  * Author: IP2Location
  * Author URI: http://www.ip2location.com
  */
@@ -543,6 +543,26 @@ class IP2LocationRedirection {
 					// Global redirection
 					if ( $values[1] == 'any' ) {
 						if ( $values[2] == 'url' ) {
+							if( $_SERVER['QUERY_STRING'] ) {
+								parse_str( $_SERVER['QUERY_STRING'], $query_string );
+
+								$data = parse_url( $values[3] );
+
+								$post_query = array();
+
+								if( isset( $data['query'] ) ){
+									parse_str( $data['query'], $post_query );
+								}
+
+								$queries = array_merge( $post_query, $query_string );
+
+								unset( $queries['p'] );
+
+								header( 'Location: ' . $data['scheme'] . '://' . $data['host'] . $data['path'] . '/?' . http_build_query( $queries ), true, $values[4] );
+
+								die;
+							}
+
 							header( 'Location: ' . $values[3], true, $values[4] );
 							die;
 						}
@@ -557,6 +577,26 @@ class IP2LocationRedirection {
 
 					if ( $id == get_the_ID() ) {
 						if ( $values[2] == 'url' ) {
+							if( $_SERVER['QUERY_STRING'] ) {
+								parse_str( $_SERVER['QUERY_STRING'], $query_string );
+
+								$data = parse_url( $values[3] );
+
+								$post_query = array();
+
+								if( isset( $data['query'] ) ){
+									parse_str( $data['query'], $post_query );
+								}
+
+								$queries = array_merge( $post_query, $query_string );
+
+								unset( $queries['p'] );
+
+								header( 'Location: ' . $data['scheme'] . '://' . $data['host'] . $data['path'] . '?' . http_build_query( $queries ), true, $values[4] );
+
+								die;
+							}
+
 							header( 'Location: ' . $values[3], true, $values[4] );
 							die;
 						}
@@ -565,7 +605,6 @@ class IP2LocationRedirection {
 
 						if( $_SERVER['QUERY_STRING'] ) {
 							parse_str( $_SERVER['QUERY_STRING'], $query_string );
-							unset( $queries['p'] );
 
 							$post_url = post_permalink( $id );
 							$data = parse_url( $post_url );
@@ -577,6 +616,8 @@ class IP2LocationRedirection {
 							}
 
 							$queries = array_merge( $post_query, $query_string );
+
+							unset( $queries['p'] );
 
 							header( 'Location: ' . $data['scheme'] . '://' . $data['host'] . $data['path'] . '/?' . http_build_query( $queries ), true, $values[4] );
 
