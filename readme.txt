@@ -4,7 +4,7 @@ Donate link: http://www.ip2location.com
 Tags: country redirection, targeted content, geolocation
 Requires at least: 2.0
 Tested up to: 4.3
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 
 Description: IP2Location Redirection allows user to redirect visitors from any URL based on their country.
 
@@ -45,6 +45,7 @@ Send us email at support@ip2location.com
 
 == Changelog ==
 
+* 1.1.6 Fixed redirection issue in iOS devices. Use latest IP2Location library.
 * 1.1.5 Remain query string after redirected to external URL.
 * 1.1.4 Fix redirect issue when URL rewrite is using.
 * 1.1.3 Will remain query string in URL after redirection.

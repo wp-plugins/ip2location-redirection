@@ -3,12 +3,16 @@
  * Plugin Name: IP2Location Redirection
  * Plugin URI: http://ip2location.com/tutorials/wordpress-ip2location-redirection
  * Description: Redirect visitors by their country.
- * Version: 1.1.5
+ * Version: 1.1.6
  * Author: IP2Location
  * Author URI: http://www.ip2location.com
  */
 defined( 'DS' ) or define( 'DS', DIRECTORY_SEPARATOR );
 define( 'IP2LOCATION_REDIRECTION_ROOT', dirname( __FILE__ ) . DS );
+
+// For development usage
+if ( isset( $_SERVER['DEV_MODE'] ) )
+	$_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
 class IP2LocationRedirection {
 	function admin_options() {
@@ -558,19 +562,15 @@ class IP2LocationRedirection {
 
 								unset( $queries['p'] );
 
-								header( 'Location: ' . $data['scheme'] . '://' . $data['host'] . $data['path'] . '/?' . http_build_query( $queries ), true, $values[4] );
-
-								die;
+								$this->redirect_to( $data['scheme'] . '://' . $data['host'] . $data['path'] . '/?' . http_build_query( $queries ), $values[4] );
 							}
 
-							header( 'Location: ' . $values[3], true, $values[4] );
-							die;
+							$this->redirect_to( $values[3], $values[4] );
 						}
 
 						list( $type, $id ) = explode( '-', $values[2] );
 
-						header( 'Location: ' . post_permalink( $id ), true, $values[4] );
-						die;
+						$this->redirect_to( post_permalink( $id ), $values[4] );
 					}
 
 					list( $type, $id ) = explode( '-', $values[1] );
@@ -592,13 +592,10 @@ class IP2LocationRedirection {
 
 								unset( $queries['p'] );
 
-								header( 'Location: ' . $data['scheme'] . '://' . $data['host'] . $data['path'] . '?' . http_build_query( $queries ), true, $values[4] );
-
-								die;
+								$this->redirect_to( $data['scheme'] . '://' . $data['host'] . $data['path'] . '?' . http_build_query( $queries ), $values[4] );
 							}
 
-							header( 'Location: ' . $values[3], true, $values[4] );
-							die;
+							$this->redirect_to( $values[3], $values[4] );
 						}
 
 						list( $type, $id ) = explode( '-', $values[2] );
@@ -619,17 +616,25 @@ class IP2LocationRedirection {
 
 							unset( $queries['p'] );
 
-							header( 'Location: ' . $data['scheme'] . '://' . $data['host'] . $data['path'] . '/?' . http_build_query( $queries ), true, $values[4] );
-
-							die;
+							$this->redirect_to( $data['scheme'] . '://' . $data['host'] . $data['path'] . '/?' . http_build_query( $queries ), $values[4] );
 						}
 
-						header( 'Location: ' . post_permalink( $id ), true, $values[4] );
-						die;
+						$this->redirect_to( post_permalink( $id ), $values[4] );
 					}
 				}
 			}
 		}
+	}
+
+	function redirect_to( $url, $mode ) {
+		header( 'Expires: Sat, 26 Jul 1997 05:00:00 GMT' );
+		header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s' ) . ' GMT' );
+		header( 'Cache-Control: max-age=0, no-cache, no-store, must-revalidate' );
+		header( 'Pragma: no-cache' );
+		header( 'HTTP/1.1 301 Moved Permanently' );
+		header( 'Location: ' . $url, true, $mode );
+
+		die;
 	}
 
 	function admin_page() {
@@ -689,18 +694,18 @@ class IP2LocationRedirection {
 				}
 
 				if ( ! class_exists( 'IP2LocationRecord' ) && ! class_exists( 'IP2Location' ) ) {
-					require_once( IP2LOCATION_REDIRECTION_ROOT . 'ip2location.class.php' );
+					require_once( IP2LOCATION_REDIRECTION_ROOT . 'class.IP2Location.php' );
 				}
 
 				// Create IP2Location object.
-				$geo = new IP2Location( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) );
+				$db = new \IP2Location\Database( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) );
 
 				// Get geolocation by IP address.
-				$response = $geo->lookup( $ip );
+				$response = $db->lookup( $ip );
 
 				return array(
-					'countryCode' => $response->countryCode,
-					'countryName' => $response->countryName,
+					'countryCode' => $response['countryCode'],
+					'countryName' => $response['countryName'],
 				);
 			break;
 
