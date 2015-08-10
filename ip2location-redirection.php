@@ -3,7 +3,7 @@
  * Plugin Name: IP2Location Redirection
  * Plugin URI: http://ip2location.com/tutorials/wordpress-ip2location-redirection
  * Description: Redirect visitors by their country.
- * Version: 1.1.6
+ * Version: 1.1.7
  * Author: IP2Location
  * Author URI: http://www.ip2location.com
  */
@@ -693,7 +693,7 @@ class IP2LocationRedirection {
 					return false;
 				}
 
-				if ( ! class_exists( 'IP2LocationRecord' ) && ! class_exists( 'IP2Location' ) ) {
+				if ( ! class_exists( 'IP2Location\Database' ) ) {
 					require_once( IP2LOCATION_REDIRECTION_ROOT . 'class.IP2Location.php' );
 				}
 
