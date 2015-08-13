@@ -397,28 +397,28 @@ class Database {
    * @static
    * @var array
    */
-  private static $columns = [
-      self::COUNTRY_CODE         => [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
-      self::COUNTRY_NAME         => [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
-      self::REGION_NAME          => [0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12],
-      self::CITY_NAME            => [0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16],
-      self::LATITUDE             => [0, 0, 0, 0, 20, 20, 0, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
-      self::LONGITUDE            => [0, 0, 0, 0, 24, 24, 0, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24],
-      self::ISP                  => [0, 12, 0, 20, 0, 28, 20, 28, 0, 32, 0, 36, 0, 36, 0, 36, 0, 36, 28, 36, 0, 36, 28, 36],
-      self::DOMAIN_NAME          => [0, 0, 0, 0, 0, 0, 24, 32, 0, 36, 0, 40, 0, 40, 0, 40, 0, 40, 32, 40, 0, 40, 32, 40],
-      self::ZIP_CODE             => [0, 0, 0, 0, 0, 0, 0, 0, 28, 28, 28, 28, 0, 28, 28, 28, 0, 28, 0, 28, 28, 28, 0, 28],
-      self::TIME_ZONE            => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 32, 28, 32, 32, 32, 28, 32, 0, 32, 32, 32, 0, 32],
-      self::NET_SPEED            => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 44, 0, 44, 32, 44, 0, 44, 0, 44, 0, 44],
-      self::IDD_CODE             => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 48, 0, 48, 0, 48, 36, 48, 0, 48],
-      self::AREA_CODE            => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 52, 0, 52, 0, 52, 40, 52, 0, 52],
-      self::WEATHER_STATION_CODE => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 56, 0, 56, 0, 56, 0, 56],
-      self::WEATHER_STATION_NAME => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 60, 0, 60, 0, 60, 0, 60],
-      self::MCC                  => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 64, 0, 64, 36, 64],
-      self::MNC                  => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 68, 0, 68, 40, 68],
-      self::MOBILE_CARRIER_NAME  => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44, 72, 0, 72, 44, 72],
-      self::ELEVATION            => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44, 76, 0, 76],
-      self::USAGE_TYPE           => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 48, 80],
-  ];
+  private static $columns = array(
+      self::COUNTRY_CODE         => array(8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8),
+      self::COUNTRY_NAME         => array(8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8),
+      self::REGION_NAME          => array(0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12),
+      self::CITY_NAME            => array(0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16),
+      self::LATITUDE             => array(0, 0, 0, 0, 20, 20, 0, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20),
+      self::LONGITUDE            => array(0, 0, 0, 0, 24, 24, 0, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24),
+      self::ISP                  => array(0, 12, 0, 20, 0, 28, 20, 28, 0, 32, 0, 36, 0, 36, 0, 36, 0, 36, 28, 36, 0, 36, 28, 36),
+      self::DOMAIN_NAME          => array(0, 0, 0, 0, 0, 0, 24, 32, 0, 36, 0, 40, 0, 40, 0, 40, 0, 40, 32, 40, 0, 40, 32, 40),
+      self::ZIP_CODE             => array(0, 0, 0, 0, 0, 0, 0, 0, 28, 28, 28, 28, 0, 28, 28, 28, 0, 28, 0, 28, 28, 28, 0, 28),
+      self::TIME_ZONE            => array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 32, 28, 32, 32, 32, 28, 32, 0, 32, 32, 32, 0, 32),
+      self::NET_SPEED            => array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 44, 0, 44, 32, 44, 0, 44, 0, 44, 0, 44),
+      self::IDD_CODE             => array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 48, 0, 48, 0, 48, 36, 48, 0, 48),
+      self::AREA_CODE            => array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 52, 0, 52, 0, 52, 40, 52, 0, 52),
+      self::WEATHER_STATION_CODE => array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 56, 0, 56, 0, 56, 0, 56),
+      self::WEATHER_STATION_NAME => array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 60, 0, 60, 0, 60, 0, 60),
+      self::MCC                  => array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 64, 0, 64, 36, 64),
+      self::MNC                  => array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 68, 0, 68, 40, 68),
+      self::MOBILE_CARRIER_NAME  => array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44, 72, 0, 72, 44, 72),
+      self::ELEVATION            => array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44, 76, 0, 76),
+      self::USAGE_TYPE           => array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 48, 80),
+  );
 
   /**
    * Column name mapping
@@ -427,7 +427,7 @@ class Database {
    * @static
    * @var array
    */
-  private static $names = [
+  private static $names = array(
       self::COUNTRY_CODE         => 'countryCode',
       self::COUNTRY_NAME         => 'countryName',
       self::REGION_NAME          => 'regionName',
@@ -451,14 +451,14 @@ class Database {
       self::IP_ADDRESS           => 'ipAddress',
       self::IP_VERSION           => 'ipVersion',
       self::IP_NUMBER            => 'ipNumber',
-  ];
+  );
 
   /**
    * Database names, in order of preference for file lookup
    *
    * @var array
    */
-  private static $databases = [
+  private static $databases = array(
       // IPv4 databases
       'IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION-USAGETYPE',
       'IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP-DOMAIN-MOBILE-USAGETYPE',
@@ -509,7 +509,7 @@ class Database {
       'IPV6-COUNTRY-REGION-CITY',
       'IPV6-COUNTRY-ISP',
       'IPV6-COUNTRY',
-  ];
+  );
 
   /**
    * Static memory buffer to use for MEMORY_CACHE mode, the keys will be BIN filenames and the values their contents
@@ -518,7 +518,7 @@ class Database {
    * @static
    * @var array
    */
-  private static $buffer = [];
+  private static $buffer = array();
 
   /**
    * The machine's float size
@@ -584,7 +584,7 @@ class Database {
    * @access private
    * @var array
    */
-  private $columnWidth = [];
+  private $columnWidth = array();
 
   /**
    * Database's pointer offset (as an array mapping 4 to IPv4 offset, and 6 to IPv6 offset)
@@ -592,7 +592,7 @@ class Database {
    * @access private
    * @var array
    */
-  private $offset = [];
+  private $offset = array();
 
   /**
    * Amount of IP address ranges the database contains (as an array mapping 4 to IPv4 count, and 6 to IPv6 count)
@@ -600,7 +600,7 @@ class Database {
    * @access private
    * @var array
    */
-  private $ipCount = [];
+  private $ipCount = array();
 
   /**
    * Offset withing the database where IP data begins (as an array mapping 4 to IPv4 base, and 6 to IPv6 base)
@@ -608,7 +608,7 @@ class Database {
    * @access private
    * @var array
    */
-  private $ipBase = [];
+  private $ipBase = array();
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Default fields  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -890,7 +890,10 @@ class Database {
    * @return int
    */
   private static function wrap8($x) {
-    return $x + ($x < 0 ? 256 : 0);
+	if($x < 0){
+	  return $x + 256;
+	}
+    return $x;
   }
 
   /**
@@ -902,7 +905,10 @@ class Database {
    * @return int
    */
   private static function wrap32($x) {
-    return $x + ($x < 0 ? 4294967296 : 0);
+	if($x < 0){
+	  return $x + 4294967296;
+	}
+	return $x;
   }
 
   /**
@@ -976,13 +982,13 @@ class Database {
   private static function ipVersionAndNumber($ip) {
     if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
       // Use bin2hex + base_convert to deal with normal PHP ints
-      return [4, (int) base_convert(bin2hex(inet_pton($ip)), 16, 10)];
+      return array(4, (int) base_convert(bin2hex(inet_pton($ip)), 16, 10));
     } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
       // Use bcBin2Dec to deal with BCMath ints
-      return [6, self::bcBin2Dec(inet_pton($ip))];
+      return array(6, self::bcBin2Dec(inet_pton($ip)));
     } else {
       // Invalid IP address, return falses
-      return [false, false];
+      return array(false, false);
     }
   }
 
@@ -1060,7 +1066,8 @@ class Database {
    */
   private function readFloat($pos) {
     // Unpack a float's size worth of data
-    return unpack('f', $this->read($pos - 1, self::$floatSize))[1];
+	$result = unpack('f', $this->read($pos - 1, self::$floatSize));
+    return $result[1];
   }
 
   /**
@@ -1084,7 +1091,8 @@ class Database {
    */
   private function readWord($pos) {
     // Unpack a long's worth of data
-    return self::wrap32(unpack('V', $this->read($pos - 1, 4))[1]);
+	$result = self::wrap32(unpack('V', $this->read($pos - 1, 4)));
+    return $result[1];
   }
 
   /**
@@ -1096,7 +1104,8 @@ class Database {
    */
   private function readByte($pos) {
     // Unpack a byte's worth of data
-    return self::wrap8(unpack('C', $this->read($pos - 1, 1))[1]);
+	$result = self::wrap8(unpack('C', $this->read($pos - 1, 1)));
+    return $result[1];
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1127,7 +1136,7 @@ class Database {
       $countryName = $this->readString($pointer + self::$columns[self::COUNTRY_NAME][$this->type], 3);
     }
 
-    return [$countryName, $countryCode];
+    return array($countryName, $countryCode);
   }
 
   /**
@@ -1193,7 +1202,7 @@ class Database {
       $latitude  = $this->readFloat($pointer + self::$columns[self::LATITUDE][$this->type]);
       $longitude = $this->readFloat($pointer + self::$columns[self::LONGITUDE][$this->type]);
     }
-    return [$latitude, $longitude];
+    return array($latitude, $longitude);
   }
 
   /**
@@ -1322,7 +1331,7 @@ class Database {
       $iddCode  = $this->readString($pointer + self::$columns[self::IDD_CODE][$this->type]);
       $areaCode = $this->readString($pointer + self::$columns[self::AREA_CODE][$this->type]);
     }
-    return [$iddCode, $areaCode];
+    return array($iddCode, $areaCode);
   }
 
   /**
@@ -1346,7 +1355,7 @@ class Database {
       $weatherStationName = $this->readString($pointer + self::$columns[self::WEATHER_STATION_NAME][$this->type]);
       $weatherStationCode = $this->readString($pointer + self::$columns[self::WEATHER_STATION_CODE][$this->type]);
     }
-    return [$weatherStationName, $weatherStationCode];
+    return array($weatherStationName, $weatherStationCode);
   }
 
   /**
@@ -1373,7 +1382,7 @@ class Database {
       $mnc               = $this->readString($pointer + self::$columns[self::MNC][$this->type]);
       $mobileCarrierName = $this->readString($pointer + self::$columns[self::MOBILE_CARRIER_NAME][$this->type]);
     }
-    return [$mcc, $mnc, $mobileCarrierName];
+    return array($mcc, $mnc, $mobileCarrierName);
   }
 
   /**
@@ -1524,7 +1533,7 @@ class Database {
               return 0 !== $field[$this->type];
             }));
     if ($asNames) {
-      $return = [];
+      $return = array();
       foreach ($result as $field) {
         $return[] = self::$names[$field];
       }
@@ -1592,7 +1601,7 @@ class Database {
     rsort($afields);
 
     // maintain a list of already retrieved fields to avoid doing it twice
-    $done    = [
+    $done    = array(
         self::COUNTRY_CODE                => false,
         self::COUNTRY_NAME                => false,
         self::REGION_NAME                 => false,
@@ -1623,9 +1632,9 @@ class Database {
         self::IP_ADDRESS                  => false,
         self::IP_VERSION                  => false,
         self::IP_NUMBER                   => false,
-    ];
+    );
     // results are empty to begin with
-    $results = [];
+    $results = array();
 
     // treat each field in turn
     foreach ($afields as $afield) {
@@ -1677,13 +1686,15 @@ class Database {
         //
         case self::COUNTRY_CODE:
           if (!$done[self::COUNTRY_CODE]) {
-            $results[self::COUNTRY_CODE] = $this->readCountryNameAndCode($pointer)[1];
+			$result = $this->readCountryNameAndCode($pointer);
+            $results[self::COUNTRY_CODE] = $result[1];
             $done[self::COUNTRY_CODE]    = true;
           }
           break;
         case self::COUNTRY_NAME:
           if (!$done[self::COUNTRY_CODE]) {
-            $results[self::COUNTRY_CODE] = $this->readCountryNameAndCode($pointer)[0];
+			$result = $this->readCountryNameAndCode($pointer);
+            $results[self::COUNTRY_CODE] = $result[0];
             $done[self::COUNTRY_CODE]    = true;
           }
           break;
@@ -1701,13 +1712,15 @@ class Database {
           break;
         case self::LATITUDE:
           if (!$done[self::LATITUDE]) {
-            $results[self::LATITUDE] = $this->readLatitudeAndLongitude($pointer)[0];
+			$result = $this->readLatitudeAndLongitude($pointer);
+            $results[self::LATITUDE] = $result[0];
             $done[self::LATITUDE]    = true;
           }
           break;
         case self::LONGITUDE:
           if (!$done[self::LONGITUDE]) {
-            $results[self::LONGITUDE] = $this->readLatitudeAndLongitude($pointer)[1];
+			$result = $this->readLatitudeAndLongitude($pointer);
+            $results[self::LONGITUDE] = $result[1];
             $done[self::LONGITUDE]    = true;
           }
           break;
@@ -1743,43 +1756,50 @@ class Database {
           break;
         case self::IDD_CODE:
           if (!$done[self::IDD_CODE]) {
-            $results[self::IDD_CODE] = $this->readIddAndAreaCodes($pointer)[0];
+			$result = $this->readIddAndAreaCodes($pointer);
+            $results[self::IDD_CODE] = $result[0];
             $done[self::IDD_CODE]    = true;
           }
           break;
         case self::AREA_CODE:
           if (!$done[self::AREA_CODE]) {
-            $results[self::AREA_CODE] = $this->readIddAndAreaCodes($pointer)[1];
+			$result = $this->readIddAndAreaCodes($pointer);
+            $results[self::AREA_CODE] = $result[1];
             $done[self::AREA_CODE]    = true;
           }
           break;
         case self::WEATHER_STATION_CODE:
           if (!$done[self::WEATHER_STATION_CODE]) {
-            $results[self::WEATHER_STATION_CODE] = $this->readWeatherStationNameAndCode($pointer)[1];
+			$result = $this->readWeatherStationNameAndCode($pointer);
+            $results[self::WEATHER_STATION_CODE] = $result[1];
             $done[self::WEATHER_STATION_CODE]    = true;
           }
           break;
         case self::WEATHER_STATION_NAME:
           if (!$done[self::WEATHER_STATION_NAME]) {
-            $results[self::WEATHER_STATION_NAME] = $this->readWeatherStationNameAndCode($pointer)[0];
+			$result = $this->readWeatherStationNameAndCode($pointer);
+            $results[self::WEATHER_STATION_NAME] = $result[0];
             $done[self::WEATHER_STATION_NAME]    = true;
           }
           break;
         case self::MCC:
           if (!$done[self::MCC]) {
-            $results[self::MCC] = $this->readMccMncAndMobileCarrierName($pointer)[0];
+			$result = $this->readMccMncAndMobileCarrierName($pointer);
+            $results[self::MCC] = $result[0];
             $done[self::MCC]    = true;
           }
           break;
         case self::MNC:
           if (!$done[self::MNC]) {
-            $results[self::MNC] = $this->readMccMncAndMobileCarrierName($pointer)[1];
+			$result = $this->readMccMncAndMobileCarrierName($pointer);
+            $results[self::MNC] = $result[1];
             $done[self::MNC]    = true;
           }
           break;
         case self::MOBILE_CARRIER_NAME:
           if (!$done[self::MOBILE_CARRIER_NAME]) {
-            $results[self::MOBILE_CARRIER_NAME] = $this->readMccMncAndMobileCarrierName($pointer)[2];
+			$result = $this->readMccMncAndMobileCarrierName($pointer);
+            $results[self::MOBILE_CARRIER_NAME] = $result[2];
             $done[self::MOBILE_CARRIER_NAME]    = true;
           }
           break;
@@ -1825,7 +1845,7 @@ class Database {
       // return array
       if ($asNamed) {
         // apply translations if needed
-        $return = [];
+        $return = array();
         foreach ($results as $key => $val) {
           if (array_key_exists($key, static::$names)) {
             $return[static::$names[$key]] = $val;
@@ -1839,8 +1859,10 @@ class Database {
       }
     } else {
       // return a single value
-      return array_values($results)[0];
+	  $result = array_values($results);
+      return $result[0];
     }
   }
 
 }
+?>
