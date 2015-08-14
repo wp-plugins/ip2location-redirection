@@ -3,7 +3,7 @@
  * Plugin Name: IP2Location Redirection
  * Plugin URI: http://ip2location.com/tutorials/wordpress-ip2location-redirection
  * Description: Redirect visitors by their country.
- * Version: 1.1.8
+ * Version: 1.1.9
  * Author: IP2Location
  * Author URI: http://www.ip2location.com
  */
@@ -478,7 +478,7 @@ class IP2LocationRedirection {
 			$ipAddress = ( isset( $_POST['ipAddress'] ) ) ? $_POST['ipAddress'] : '';
 
 			if ( isset( $_POST['lookup'] ) ) {
-				if ( !filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
+				if ( !filter_var($ipAddress, FILTER_VALIDATE_IP ) ) {
 					echo '
 					<div id="message" class="error">
 						<p><strong>ERROR</strong>: Invalid IP address.</p>
@@ -536,7 +536,7 @@ class IP2LocationRedirection {
 		if( !is_null( $data = json_decode( get_option( 'ip2location_redirection_rules' ) ) ) ) {
 			$ipAddress = $_SERVER['REMOTE_ADDR'];
 
-			if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 ) ) {
+			if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP ) ) {
 				$ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
 			}
 
@@ -693,19 +693,19 @@ class IP2LocationRedirection {
 					return false;
 				}
 
-				if ( ! class_exists( 'IP2Location\Database' ) ) {
+				if ( !class_exists( 'IP2LocationRecord' ) && !class_exists( 'IP2Location' ) ) {
 					require_once( IP2LOCATION_REDIRECTION_ROOT . 'class.IP2Location.php' );
 				}
 
 				// Create IP2Location object.
-				$db = new \IP2Location\Database( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) );
+				$db = new IP2Location( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_country_blocker_database' ) );
 
 				// Get geolocation by IP address.
 				$response = $db->lookup( $ip );
 
 				return array(
-					'countryCode' => $response['countryCode'],
-					'countryName' => $response['countryName'],
+					'countryCode' => $response->countryCode,
+					'countryName' => $response->countryName,
 				);
 			break;
 

@@ -45,6 +45,7 @@ Send us email at support@ip2location.com
 
 == Changelog ==
 
+* 1.1.9 Fixed compatible issues with PHP 5.3 or earlier.
 * 1.1.8 Fixed errors with PHP 5.3 or earlier.
 * 1.1.7 Fixed class name issue when upgrade from previous version.
 * 1.1.6 Fixed redirection issue in iOS devices. Use latest IP2Location library.
