@@ -3,7 +3,7 @@
  * Plugin Name: IP2Location Redirection
  * Plugin URI: http://ip2location.com/tutorials/wordpress-ip2location-redirection
  * Description: Redirect visitors by their country.
- * Version: 1.1.9
+ * Version: 1.1.11
  * Author: IP2Location
  * Author URI: http://www.ip2location.com
  */
@@ -185,7 +185,7 @@ class IP2LocationRedirection {
 							});
 						});
 
-						$("#form-redirection").on("submit", function(e){
+						/*$("#form-redirection").on("submit", function(e){
 							if($("#enable-redirection").is(":checked")){
 								$(\'select[name="from[]"]\').each(function(){
 									if($(this).val() == ""){
@@ -195,7 +195,7 @@ class IP2LocationRedirection {
 									}
 								});
 							}
-						});
+						});*/
 
 						$("#use-bin").on("click", function(){
 							$("#bin-mode").show();
@@ -529,10 +529,6 @@ class IP2LocationRedirection {
 			return;
 		}
 
-		if ( !session_id() ) {
-			session_start();
-		}
-
 		if( !is_null( $data = json_decode( get_option( 'ip2location_redirection_rules' ) ) ) ) {
 			$ipAddress = $_SERVER['REMOTE_ADDR'];
 
@@ -550,6 +546,9 @@ class IP2LocationRedirection {
 							if( $_SERVER['QUERY_STRING'] ) {
 								parse_str( $_SERVER['QUERY_STRING'], $query_string );
 
+								unset( $query_string['page_id'] );
+								unset( $query_string['p'] );
+
 								$data = parse_url( $values[3] );
 
 								$post_query = array();
@@ -562,7 +561,7 @@ class IP2LocationRedirection {
 
 								unset( $queries['p'] );
 
-								$this->redirect_to( $data['scheme'] . '://' . $data['host'] . $data['path'] . '/?' . http_build_query( $queries ), $values[4] );
+								$this->redirect_to( $data['scheme'] . '://' . $data['host'] . $data['path'] . '?' . http_build_query( $queries ), $values[4] );
 							}
 
 							$this->redirect_to( $values[3], $values[4] );
@@ -579,6 +578,9 @@ class IP2LocationRedirection {
 						if ( $values[2] == 'url' ) {
 							if( $_SERVER['QUERY_STRING'] ) {
 								parse_str( $_SERVER['QUERY_STRING'], $query_string );
+
+								unset( $query_string['page_id'] );
+								unset( $query_string['p'] );
 
 								$data = parse_url( $values[3] );
 
@@ -603,6 +605,9 @@ class IP2LocationRedirection {
 						if( $_SERVER['QUERY_STRING'] ) {
 							parse_str( $_SERVER['QUERY_STRING'], $query_string );
 
+							unset( $query_string['page_id'] );
+							unset( $query_string['p'] );
+
 							$post_url = post_permalink( $id );
 							$data = parse_url( $post_url );
 
@@ -614,9 +619,7 @@ class IP2LocationRedirection {
 
 							$queries = array_merge( $post_query, $query_string );
 
-							unset( $queries['p'] );
-
-							$this->redirect_to( $data['scheme'] . '://' . $data['host'] . $data['path'] . '/?' . http_build_query( $queries ), $values[4] );
+							$this->redirect_to( $data['scheme'] . '://' . $data['host'] . $data['path'] . '?' . http_build_query( $queries ), $values[4] );
 						}
 
 						$this->redirect_to( post_permalink( $id ), $values[4] );
@@ -815,8 +818,8 @@ class IP2LocationRedirection {
 $ip2location_redirection = new IP2LocationRedirection();
 $ip2location_redirection->start();
 
-register_activation_hook( __FILE__, array( $ip2location_redirection, 'set_defaults' ) );
-register_uninstall_hook( __FILE__, array( $ip2location_redirection, 'uninstall' ) );
+register_activation_hook( __FILE__, $ip2location_redirection::set_defaults() );
+register_uninstall_hook( __FILE__, $ip2location_redirection::uninstall() );
 
 add_action( 'wp_ajax_update_ip2location_redirection_database', array( $ip2location_redirection, 'download' ) );
 add_action( 'wp', array( $ip2location_redirection, 'redirect' ) );

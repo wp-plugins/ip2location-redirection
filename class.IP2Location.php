@@ -373,7 +373,7 @@ class IP2Location {
       }
       return $ar;
     }
-    return unpack($format, $data);
+    return @unpack($format, $data);
   }
 
   /**
