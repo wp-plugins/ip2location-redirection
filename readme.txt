@@ -4,7 +4,7 @@ Donate link: http://www.ip2location.com
 Tags: country redirection, targeted content, geolocation
 Requires at least: 2.0
 Tested up to: 4.3
-Stable tag: 1.1.11
+Stable tag: 1.1.12
 
 Description: IP2Location Redirection allows user to redirect visitors from any URL based on their country.
 
@@ -45,6 +45,7 @@ Send us email at support@ip2location.com
 
 == Changelog ==
 
+* 1.1.12 Fixed save issues.
 * 1.1.11 Fixed warning message in WordPress 4.3.
 * 1.1.10 Fixed redirection issues. Fixed errors with earlier version of PHP.
 * 1.1.9 Fixed compatible issues with PHP 5.3 or earlier.

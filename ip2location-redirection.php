@@ -3,7 +3,7 @@
  * Plugin Name: IP2Location Redirection
  * Plugin URI: http://ip2location.com/tutorials/wordpress-ip2location-redirection
  * Description: Redirect visitors by their country.
- * Version: 1.1.11
+ * Version: 1.1.12
  * Author: IP2Location
  * Author URI: http://www.ip2location.com
  */
@@ -683,7 +683,7 @@ class IP2LocationRedirection {
 		// Remove all settings
 		delete_option( 'ip2location_redirection_enabled' );
 		delete_option( 'ip2location_redirection_lookup_mode' );
-		update_option( 'ip2location_redirection_api_key', '' );
+		delete_option( 'ip2location_redirection_api_key', '' );
 		delete_option( 'ip2location_redirection_database' );
 		delete_option( 'ip2location_redirection_rules' );
 	}
@@ -818,8 +818,8 @@ class IP2LocationRedirection {
 $ip2location_redirection = new IP2LocationRedirection();
 $ip2location_redirection->start();
 
-register_activation_hook( __FILE__, $ip2location_redirection::set_defaults() );
-register_uninstall_hook( __FILE__, $ip2location_redirection::uninstall() );
+register_activation_hook( __FILE__, array( $ip2location_redirection, 'set_defaults' ) );
+register_uninstall_hook( __FILE__, array( $ip2location_redirection, 'uninstall' ) );
 
 add_action( 'wp_ajax_update_ip2location_redirection_database', array( $ip2location_redirection, 'download' ) );
 add_action( 'wp', array( $ip2location_redirection, 'redirect' ) );
