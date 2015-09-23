@@ -12,13 +12,15 @@ Description: IP2Location Redirection allows user to redirect visitors from any U
 
 IP2Location Redirection allows user to redirect visitors from any URL based on their country.
 
-Key Features
-* Allow you to redirect the users to a predefined URL based on countries.
-* Allow you to redirect multiple countries.
+Key Features  
+* Allow you to redirect the users to a predefined URL based on countries.  
+* Allow you to redirect multiple countries.  
 
 This plugin uses IP2Location BIN file for location queries that free your hassle from setting up the relational database. Moreover, IP2Location provides monthly BIN update for your download, so that you could have the latest and accurate query results.
 
-BIN file download: [IP2Location Commercial database](http://ip2location.com "IP2Location commercial database") | [IP2Location LITE database](http://lite.ip2location.com "IP2Location LITE database")
+BIN file download: [IP2Location Commercial database](http://ip2location.com "IP2Location commercial database") | [IP2Location LITE database](http://lite.ip2location.com "IP2Location LITE database")  
+  
+Alternatively, this plugin also support IP2Location web service API to geo locate visitor's IP address.  
 
 = More Information =
 Please visit us at [http://www.ip2location.com](http://www.ip2location.com "http://www.ip2location.com")
