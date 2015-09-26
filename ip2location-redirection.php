@@ -698,7 +698,7 @@ class IP2LocationRedirection {
 				}
 
 				// Create IP2Location object.
-				$db = new IP2Location( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_country_blocker_database' ) );
+				$db = new IP2Location( IP2LOCATION_REDIRECTION_ROOT . get_option( 'ip2location_redirection_database' ) );
 
 				// Get geolocation by IP address.
 				$response = $db->lookup( $ip );
